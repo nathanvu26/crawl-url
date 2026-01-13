@@ -4,6 +4,7 @@
 import os
 import requests
 import re
+import sys
 # Code here - Import BeautifulSoup library
 
 # Code ends here
@@ -13,14 +14,16 @@ def get_page():
 	global url
 	
 	# Code here - Ask the user to input "Enter url of a medium article: " and collect it in url
-	
+	url = str(input("Enter url of a medium article: "))
 	# Code ends here
 	
 	# handling possible error
 	if not re.match(r'https?://medium.com/',url):
 		print('Please enter a valid website, or make sure it is a medium article')
 		sys.exit(1)
-
+  
+	print("Correct url")
+	return
 	# Code here - Call get method in requests object, pass url and collect it in res
 	
 	# Code ends here
@@ -62,9 +65,11 @@ def save_file(text):
 
 	print(f'File saved in directory {fname}')
 
-
-if __name__ == '__main__':
+def main():
 	text = collect_text(get_page())
 	save_file(text)
+
+if __name__ == '__main__':
+	get_page()
 	# Instructions to Run this python code
 	# Give url as https://medium.com/@subashgandyer/papa-what-is-a-neural-network-c5e5cc427c7
