@@ -5,31 +5,28 @@ import os
 import requests
 import re
 import sys
-# Code here - Import BeautifulSoup library
-
-# Code ends here
+from seleniumbase import SB
+from bs4 import BeautifulSoup
 
 # function to get the html source text of the medium article
 def get_page():
 	global url
-	
-	# Code here - Ask the user to input "Enter url of a medium article: " and collect it in url
+
 	url = str(input("Enter url of a medium article: "))
-	# Code ends here
-	
+
 	# handling possible error
 	if not re.match(r'https?://medium.com/',url):
 		print('Please enter a valid website, or make sure it is a medium article')
 		sys.exit(1)
-  
-	print("Correct url")
-	return
-	# Code here - Call get method in requests object, pass url and collect it in res
-	
-	# Code ends here
 
-	res.raise_for_status()
-	soup = BeautifulSoup(res.text, 'html.parser')
+	#res = requests.get(url)
+	with SB(uc=True, locale="en") as sb:
+		sb.open(url)
+		res = sb.get_page_source()
+		
+	#res.raise_for_status()
+ 
+	soup = BeautifulSoup(res, 'html.parser')
 	return soup
 
 # function to remove all the html tags and replace some with specific strings
@@ -40,7 +37,6 @@ def clean(text):
     text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
     text = re.sub('\<(.*?)\>', '', text)
     return text
-
 
 def collect_text(soup):
 	text = f'url: {url}\n\n'
@@ -59,7 +55,8 @@ def save_file(text):
 	fname = f'scraped_articles/{name}.txt'
 	
 	# Code here - write a file using with (2 lines)
-	
+	with open(fname, 'w', encoding='utf-8') as f:
+		f.write(text)
 
 	# Code ends here
 
@@ -70,6 +67,6 @@ def main():
 	save_file(text)
 
 if __name__ == '__main__':
-	get_page()
+	main()
 	# Instructions to Run this python code
 	# Give url as https://medium.com/@subashgandyer/papa-what-is-a-neural-network-c5e5cc427c7
