@@ -5,7 +5,7 @@ import os
 import requests
 import re
 import sys
-from seleniumbase import SB
+from seleniumbase import Driver
 from bs4 import BeautifulSoup
 
 # function to get the html source text of the medium article
@@ -19,10 +19,12 @@ def get_page():
 		print('Please enter a valid website, or make sure it is a medium article')
 		sys.exit(1)
 
-	#res = requests.get(url)
-	with SB(uc=True, locale="en") as sb:
-		sb.open(url)
-		res = sb.get_page_source()
+	#res = requests.get(url) <-- returns Error Code 403
+ 
+	driver = Driver(uc=True)
+	driver.get(url)
+	res = driver.page_source
+	driver.quit()
 		
 	#res.raise_for_status()
  
@@ -54,11 +56,8 @@ def save_file(text):
 	print(name)
 	fname = f'scraped_articles/{name}.txt'
 	
-	# Code here - write a file using with (2 lines)
 	with open(fname, 'w', encoding='utf-8') as f:
 		f.write(text)
-
-	# Code ends here
 
 	print(f'File saved in directory {fname}')
 
